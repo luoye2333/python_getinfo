@@ -20,8 +20,8 @@ with open("node","r",newline="",encoding="utf-8") as file_node:
 
 
 #打开文件准备
-file_node=open("node","w",newline="",encoding="utf-8")
-file_connection=open("connection","w",newline="",encoding="utf-8")
+file_node=open("./node","w",newline="",encoding="utf-8")
+file_connection=open("./connection","w",newline="",encoding="utf-8")
 writer_node=csv.writer(file_node)
 writer_connection=csv.writer(file_connection)
 writer_node.writerow(["node_id","name","level","only_url"])
@@ -33,6 +33,16 @@ firsturl="https://steamcommunity.com/profiles/76561198236936012/"#luoye
 urlqueue=[]
 urlqueue.append(firsturl)
 count=0
+def search(url):
+    #在node(list)中查找url
+    #如果有 返回node_id
+    #没有则返回-1
+    node_id=-1
+    for i in range(len(node)):
+        if url==node[i][4-1]:
+            node_id=node[i][0]
+            break
+    return node_id
 def getplayer(url):
     global count
     count+=1
@@ -51,14 +61,18 @@ def getplayer(url):
     #debug
     print([count,myname,mylevel])
 
-    #之后获取六个好友的信息
+    #之后获取七个好友的信息
     friends_block_data=browser.find_element_by_class_name("profile_rightcol")\
     .find_elements_by_css_selector("div:nth-child(4) > div > div:nth-child(2) > div")
     for i in friends_block_data:
         friend_url=i.find_element_by_css_selector("a").get_attribute("href")
         #if friend_url in node... then continue
+        #如果好友在之前已经加入了node表，则之前一定查找过了，跳过
+        if search(friend_url)==-1:
+            urlqueue.append(friend_url)
+
         #link(url,friend_url)
-        urlqueue.append(friend_url)
+        
 
 
 while (urlqueue!=[])and(count<30):

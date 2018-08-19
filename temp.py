@@ -1,13 +1,7 @@
+import datetime
+today=datetime.datetime.now().strftime("%Y_%m_%d_%H_%M")
 import csv
-import numpy as np
-
-node=[]
-with open("node","r",newline="",encoding="utf-8") as file_node:
-    reader_node=csv.reader(file_node)
-    rowcount=0
-    for row in reader_node:
-        rowcount += 1
-        if rowcount == 1:continue
-        node.append(row)
-
-print(node)       
+csv_file=open("./"+today+"_steam_recommend.csv","w",newline="",encoding="utf-8")
+writer=csv.writer(csv_file)
+writer.writerow([1,2])
+csv_file.close()
